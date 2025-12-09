@@ -4,6 +4,18 @@ export default function NotFound() {
     return (
         <main className="relative w-full min-h-screen bg-gray-100 flex flex-col lg:flex-row">
 
+            {/*<div className="absolute inset-0 z-0">*/}
+            {/*    <img*/}
+            {/*        src="/stars.png"*/}
+            {/*        alt="Stars background"*/}
+            {/*        className="w-full h-full object-cover opacity-50 absolute top-0 left-0"*/}
+            {/*    />*/}
+            {/*    <img*/}
+            {/*        src="/Vector.png"*/}
+            {/*        alt="Vector background"*/}
+            {/*        className="w-full h-full object-cover opacity-80 absolute top-0 left-0"*/}
+            {/*    />*/}
+            {/*</div>*/}
             <div className="hidden lg:flex w-16 bg-white border-r-2 border-gray-300 items-center justify-center">
                 <div className="transform -rotate-90 whitespace-nowrap">
                     <span className="text-xs font-semibold tracking-widest text-gray-400">Error 404</span>

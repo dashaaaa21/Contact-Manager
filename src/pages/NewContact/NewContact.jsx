@@ -1,35 +1,37 @@
 import * as Yup from 'yup';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { v4 as uuidv4 } from 'uuid';
+import { useNavigate } from 'react-router-dom';
 
-export default function NewContact() {
+export default function NewContact({ onNewContact }){
     const initialValues = {
         id: uuidv4(),
         firstName: '',
         lastName: '',
-        email: '',
         phone: '',
+        email: '',
         avatar: '',
         gender: '',
         status: '',
-        favourite: false,
-    };
+        favorite: false,
+    }
 
     const validationSchema = Yup.object().shape({
-        firstName: Yup.string().min(2,'Too Short!').max(50,'Too Long!').required('Required').trim(),
-        lastName: Yup.string().min(2,'Too Short!').max(50,'Too Long!').required('Required').trim(),
-        phone: Yup.string().required('Required').trim()  .min(10, 'Phone number is too short').max(11, 'Phone number is too long'),
-        email: Yup.string().email('Invalid email').required('Required').trim().matches(/@gmail\.com$/, 'Email must be a Gmail address'),
-        avatar: Yup.string().required('Required').url('Must be a valid URL'),
-        gender: Yup.string().required('Required').oneOf(['male', 'female', 'other'], 'Invalid gender'),
-        status: Yup.string().required('Required').oneOf(['active', 'inactive', 'pending'], 'Invalid status'),
+        firstName: Yup.string().min(2,'Too Short!').max(50,'Too Long!').required('Required'),
+        lastName: Yup.string().min(2,'Too Short!').max(50,'Too Long!').required('Required'),
+        phone: Yup.string().required('Required'),
+        email: Yup.string().email('Invalid email').required('Required'),
+        avatar: Yup.string().required('Required'),
+        gender: Yup.string().required('Required'),
+        status: Yup.string().required('Required'),
         favourite: Yup.boolean()
     });
 
-    const handleSubmit = (values) => {
-        console.log(values);
-    };
-
+    const navigate = useNavigate()
+    const handleSubmit = (value) =>{
+        onNewContact(value)
+        navigate('/')
+    }
     return (
         <main className="relative w-full min-h-screen bg-gray-100 flex flex-col lg:flex-row">
             <div className="hidden lg:flex w-16 bg-white border-r-2 border-gray-300 items-center justify-center">
@@ -42,10 +44,14 @@ export default function NewContact() {
 
             <div className="flex-1 bg-white flex flex-col lg:flex-row">
                 <div className="w-full lg:w-1/3 p-6 sm:p-8 lg:p-12 flex flex-col justify-start border-b-2 lg:border-b-0 lg:border-r-2 border-gray-300">
-                    <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-black mb-6 sm:mb-8 lg:mb-12 leading-tight">
+                    <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-black mb-4 sm:mb-6 lg:mb-8 leading-tight">
                        MY NEW CONTACT<br/>3 TIPS
                     </h1>
-                    
+
+                    <div className="flex items-center gap-2 mb-4 sm:mb-8">
+                        <img src="/addcontact.svg" alt="Logo" className="w-15 sm:w-30 lg:20" />
+                    </div>
+
                     <div className="space-y-4 sm:space-y-6 lg:space-y-8">
                         <div className="border-l-4 border-lime-400 pl-3 sm:pl-4">
                             <h2 className="text-xs sm:text-sm font-bold text-black mb-1 sm:mb-2 uppercase tracking-wide">Keep details simple
@@ -69,18 +75,7 @@ export default function NewContact() {
                 </div>
 
                 <div className="w-full lg:w-2/3 p-6 sm:p-8 lg:p-12 overflow-y-auto">
-                    <div className="absolute inset-0 z-0">
-                        <img
-                            src="/stars.png"
-                            alt="Stars background"
-                            className="w-full h-full object-cover opacity-50 absolute top-0 left-0"
-                        />
-                        <img
-                            src="/Vector.png"
-                            alt="Vector background"
-                            className="w-full h-full object-cover opacity-80 absolute top-0 left-0"
-                        />
-                    </div>
+
                     <Formik
                         initialValues={initialValues}
                         validationSchema={validationSchema}
@@ -96,7 +91,7 @@ export default function NewContact() {
                                         type="text"
                                         name="firstName"
                                         id="firstName"
-                                        className="border-b-2 border-gray-300 focus:border-lime-400 px-0 py-2 text-sm sm:text-base focus:outline-none transition-colors bg-transparent"
+                                        className="border-b-2 border-gray-300 focus:border-lime-400 px-0 py-2 text-sm sm:text-base focus:outline-none transition-colors bg-white text-black"
                                     />
                                     <ErrorMessage name="firstName" component="div" className="text-red-500 text-xs mt-1 min-h-[16px]" />
                                 </div>
@@ -109,7 +104,7 @@ export default function NewContact() {
                                         type="text"
                                         name="lastName"
                                         id="lastName"
-                                        className="border-b-2 border-gray-300 focus:border-lime-400 px-0 py-2 text-sm sm:text-base focus:outline-none transition-colors bg-transparent"
+                                        className="border-b-2 border-gray-300 focus:border-lime-400 px-0 py-2 text-sm sm:text-base focus:outline-none transition-colors bg-white text-black"
                                     />
                                     <ErrorMessage name="lastName" component="div" className="text-red-500 text-xs mt-1 min-h-[16px]" />
                                 </div>
@@ -122,7 +117,7 @@ export default function NewContact() {
                                         type="text"
                                         name="phone"
                                         id="phone"
-                                        className="border-b-2 border-gray-300 focus:border-lime-400 px-0 py-2 text-sm sm:text-base focus:outline-none transition-colors bg-transparent"
+                                        className="border-b-2 border-gray-300 focus:border-lime-400 px-0 py-2 text-sm sm:text-base focus:outline-none transition-colors bg-white text-black"
                                     />
                                     <ErrorMessage name="phone" component="div" className="text-red-500 text-xs mt-1 min-h-[16px]" />
                                 </div>
@@ -135,7 +130,7 @@ export default function NewContact() {
                                         type="text"
                                         name="email"
                                         id="email"
-                                        className="border-b-2 border-gray-300 focus:border-lime-400 px-0 py-2 text-sm sm:text-base focus:outline-none transition-colors bg-transparent"
+                                        className="border-b-2 border-gray-300 focus:border-lime-400 px-0 py-2 text-sm sm:text-base focus:outline-none transition-colors bg-white text-black"
                                     />
                                     <ErrorMessage name="email" component="div" className="text-red-500 text-xs mt-1 min-h-[16px]" />
                                 </div>
@@ -148,7 +143,7 @@ export default function NewContact() {
                                         type="text"
                                         name="avatar"
                                         id="avatar"
-                                        className="border-b-2 border-gray-300 focus:border-lime-400 px-0 py-2 text-sm sm:text-base focus:outline-none transition-colors bg-transparent"
+                                        className="border-b-2 border-gray-300 focus:border-lime-400 px-0 py-2 text-sm sm:text-base focus:outline-none transition-colors bg-white text-black"
                                     />
                                     <ErrorMessage name="avatar" component="div" className="text-red-500 text-xs mt-1 min-h-[16px]" />
                                 </div>
@@ -161,7 +156,7 @@ export default function NewContact() {
                                         as="select"
                                         name="gender"
                                         id="gender"
-                                        className="border-b-2 border-gray-300 focus:border-lime-400 px-0 py-2 text-sm sm:text-base focus:outline-none transition-colors bg-transparent"
+                                        className="border-b-2 border-gray-300 focus:border-lime-400 px-0 py-2 text-sm sm:text-base focus:outline-none transition-colors bg-white text-black"
                                     >
                                         <option value="">Select Gender</option>
                                         <option value="male">Male</option>
@@ -178,7 +173,7 @@ export default function NewContact() {
                                         as="select"
                                         name="status"
                                         id="status"
-                                        className="border-b-2 border-gray-300 focus:border-lime-400 px-0 py-2 text-sm sm:text-base focus:outline-none transition-colors bg-transparent"
+                                        className="border-b-2 border-gray-300 focus:border-lime-400 px-0 py-2 text-sm sm:text-base focus:outline-none transition-colors bg-white text-black"
                                     >
                                         <option value="">Select Status</option>
                                         <option value="work">Work</option>
