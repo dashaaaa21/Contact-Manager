@@ -7,6 +7,7 @@ import UpdateContact from "./pages/UpdateContact/UpdateContact";
 import NotFound from "./pages/NotFound/NotFound";
 import SignIn from "./pages/Auth/SignIn";
 import SignUp from "./pages/Auth/SignUp";
+import Welcome from "./pages/Welcome/Welcome";
 import Header from './components/Header/Header';
 
 function App() {
@@ -125,10 +126,18 @@ function App() {
         search: '',
     });
 
-    const [authState, setAuthState] = useState({
-        token: null,
-        user: null,
+    const [authState, setAuthState] = useState(() => {
+        const token = localStorage.getItem('token');
+        const user = localStorage.getItem('user');
+        return {
+            token: token || null,
+            user: user ? JSON.parse(user) : null,
+        };
     });
+
+    const [showWelcome, setShowWelcome] = useState(!authState.user);
+
+
 
     const handleNewContact = (newContact) => {
         setStor(prev => ({ ...prev, contacts: [...prev.contacts, newContact] }));
@@ -150,37 +159,60 @@ function App() {
         setStor(prev => ({ ...prev, search: symbols }));
     };
 
+    const handleWelcomeComplete = () => {
+        if (authState.user) {
+            setShowWelcome(false);
+        }
+    };
+
     const handleAuthSuccess = ({ token, user }) => {
+        localStorage.setItem('token', token);
+        localStorage.setItem('user', JSON.stringify(user));
+        
         setAuthState({
             token,
             user,
         });
-
-        // після успішного входу/реєстрації повертаємо на головну
+        
+        setShowWelcome(false);
+        
         window.location.href = '/';
     };
 
     const handleLogout = () => {
         localStorage.removeItem('token');
+        localStorage.removeItem('user');
         setAuthState({
             token: null,
             user: null,
         });
+        setShowWelcome(true);
     };
 
+    if (!authState.user) {
+        return (
+            <Router>
+                <Routes>
+                    <Route path="/" element={<Welcome />} />
+                    <Route path="/login" element={<SignIn onLoginSuccess={handleAuthSuccess} />} />
+                    <Route path="/register" element={<SignUp onRegisterSuccess={handleAuthSuccess} />} />
+                    <Route path="*" element={<Welcome />} />
+                </Routes>
+            </Router>
+        );
+    }
     return (
         <Router>
             <Header
-                searchBySymbols={searchBySymbols}
-                userEmail={authState.user?.email}
+                user={authState.user}
                 onLogout={handleLogout}
             />
             <Routes>
-                <Route path="/" element={<ContactList stor={stor} onDeleteContact={handleDeleteContact} />} />
+                <Route path="/" element={<ContactList stor={stor} onDeleteContact={handleDeleteContact} searchBySymbols={searchBySymbols} />} />
                 <Route path="/new-contact" element={<NewContact onNewContact={handleNewContact} />} />
-                <Route path="/update-contact/:id" element={<UpdateContact stor={stor} onUpdateContact={handleUpdateContact} />} />
-                <Route path="/login" element={<SignIn onLoginSuccess={handleAuthSuccess} />} />
-                <Route path="/register" element={<SignUp onRegisterSuccess={handleAuthSuccess} />} />
+                <Route path="/update-contact/:id" element={<UpdateContact stor={stor.contacts} onUpdateContact={handleUpdateContact} />} />
+                <Route path="/login" element={<ContactList stor={stor} onDeleteContact={handleDeleteContact} searchBySymbols={searchBySymbols} />} />
+                <Route path="/register" element={<ContactList stor={stor} onDeleteContact={handleDeleteContact} searchBySymbols={searchBySymbols} />} />
                 <Route path="*" element={<NotFound />} />
             </Routes>
         </Router>
