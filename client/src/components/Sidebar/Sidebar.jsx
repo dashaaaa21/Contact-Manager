@@ -1,4 +1,7 @@
-export default function Sidebar({ stor = [] }) {
+import {useSelector} from "react-redux";
+
+export default function Sidebar() {
+    const contacts = useSelector(state => state);
     const statusCounts = {
         work: 0,
         family: 0,
@@ -7,7 +10,9 @@ export default function Sidebar({ stor = [] }) {
         others: 0,
     };
 
-    stor.contacts.forEach(contact => {
+    const contactsList = contacts.contacts || [];
+    
+    contactsList.forEach(contact => {
         const status = contact.status || 'others';
         if (statusCounts[status] !== undefined) {
             statusCounts[status] += 1;
@@ -16,7 +21,7 @@ export default function Sidebar({ stor = [] }) {
         }
     });
 
-    const totalContacts = stor.length;
+    const totalContacts = contactsList.length;
 
     return (
         <aside className="w-64 text-gray-900 rounded-lg p-4">

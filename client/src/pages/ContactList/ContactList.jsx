@@ -1,7 +1,16 @@
+import { useSelector, useDispatch } from 'react-redux';
+import { setSearch } from '../../redux/actions.js';
 import ContactItem from "../../components/ContactItem/ContactItem";
 import Sidebar from "../../components/Sidebar/Sidebar.jsx";
 
-export default function ContactList({ stor, onDeleteContact, searchBySymbols }) {
+export default function ContactList() {
+    const contacts = useSelector(state => state);
+    const dispatch = useDispatch();
+
+
+    const searchBySymbols = (symbols) => {
+        dispatch(setSearch(symbols));
+    };
     return (
         <main className="relative w-full min-h-screen bg-white flex flex-col lg:flex-row">
             <div className="hidden lg:flex w-12 bg-white border-r-2 border-gray-300 items-center justify-center">
@@ -11,7 +20,7 @@ export default function ContactList({ stor, onDeleteContact, searchBySymbols }) 
             </div>
 
             <div className="w-full lg:w-1/3 p-6 sm:p-8 lg:p-12 flex flex-col justify-start border-b-2 lg:border-b-0 lg:border-r-2 border-gray-300">
-                <Sidebar stor={stor} />
+                <Sidebar />
 
                 <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-black mb-4 sm:mb-6 lg:mb-8 leading-tight">
                     MY CONTACT LIST
@@ -52,16 +61,16 @@ export default function ContactList({ stor, onDeleteContact, searchBySymbols }) 
                     />
                     <button
                         className="bg-lime-400 text-black px-4 py-2 rounded-full font-medium hover:bg-lime-300 transition"
-                        onClick={() => console.log('Search button clicked')}
+                        onClick={() => dispatch(setSearch(''))}
                     >
-                        Search
+                        Clear
                     </button>
                 </div>
                 
                 <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-black mb-6 sm:mb-8 leading-tight">
-                    My Contacts ({stor.contacts.length})
+                    My Contacts ({contacts.contacts ? contacts.contacts.length : 0})
                 </h1>
-                <ContactItem stor={stor} onDeleteContact={onDeleteContact} />
+                <ContactItem />
             </div>
 
             <div className="hidden lg:flex w-16 bg-white border-l-2 border-gray-300 items-center justify-center">

@@ -1,16 +1,24 @@
 import { Link } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { deleteContact } from "../../redux/actions.js";
 import EditButton from "../EditButton/EditButton";
 import DeleteButton from "../DeleteButton/DeleteButton";
 
-export default function ContactItem({ stor, onDeleteContact }) {
-    const searchText = stor.search.toLowerCase();
+export default function ContactItem() {
+    const contacts = useSelector(state => state);
+    const dispatch = useDispatch();
     
-    const filteredContacts = stor.contacts.filter(contact => 
-        contact.firstName.toLowerCase().includes(searchText) ||
-        contact.lastName.toLowerCase().includes(searchText) ||
-        contact.email.toLowerCase().includes(searchText) ||
-        contact.phone.toLowerCase().includes(searchText) ||
-        contact.status.toLowerCase().includes(searchText)
+    const searchText = contacts.search ? contacts.search.toLowerCase() : '';
+    const allContacts = contacts.contacts || [];
+    
+
+    
+    const filteredContacts = allContacts.filter(contact =>
+        (contact.firstName && contact.firstName.toLowerCase().includes(searchText)) ||
+        (contact.lastName && contact.lastName.toLowerCase().includes(searchText)) ||
+        (contact.email && contact.email.toLowerCase().includes(searchText)) ||
+        (contact.phone && contact.phone.toLowerCase().includes(searchText)) ||
+        (contact.status && contact.status.toLowerCase().includes(searchText))
     );
 
     return (
@@ -57,7 +65,7 @@ export default function ContactItem({ stor, onDeleteContact }) {
                                     <Link to={`/update-contact/${contact.id}`}>
                                         <EditButton />
                                     </Link>
-                                    <DeleteButton contactId={contact.id} onDelete={onDeleteContact} />
+                                    <DeleteButton contactId={contact.id} onDelete={() => dispatch(deleteContact(contact.id))} />
                                 </div>
                             </td>
                         </tr>

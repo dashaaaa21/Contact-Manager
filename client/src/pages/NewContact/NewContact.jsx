@@ -2,9 +2,12 @@ import * as Yup from 'yup';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { v4 as uuidv4 } from 'uuid';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { addContact } from '../../redux/actions.js';
 import {contactValidationSchema} from '../../validation/validation';
 
-export default function NewContact({ onNewContact }){
+export default function NewContact(){
+    const dispatch = useDispatch();
     const navigate = useNavigate()
     const initialValues = {
         id: uuidv4(),
@@ -19,7 +22,7 @@ export default function NewContact({ onNewContact }){
     }
 
     const handleSubmit = (value) =>{
-        onNewContact(value)
+        dispatch(addContact(value))
         navigate('/')
     }
     return (

@@ -1,19 +1,23 @@
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { useNavigate, useParams } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
+import { editContact } from '../../redux/actions.js';
 import { contactValidationSchema } from '../../validation/validation';
 
-export default function UpdateContact({ stor, onUpdateContact }) {
+export default function UpdateContact() {
     const { id } = useParams();
     const navigate = useNavigate();
+    const dispatch = useDispatch();
+    const contacts = useSelector(state => state);
 
-    const contact = stor.find(contact => contact.id === id);
+    const contact = contacts.contacts.find(contact => contact.id === id);
 
     if (!contact) return <h2 className="p-6 text-xl font-bold">Contact not found</h2>;
 
     const initialValues = { ...contact };
 
     const handleSubmit = (values) => {
-        onUpdateContact(values);
+        dispatch(editContact(id, values));
         navigate('/');
     };
 
