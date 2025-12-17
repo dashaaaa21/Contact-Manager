@@ -38,7 +38,7 @@ export default function SignUp({ onRegisterSuccess }) {
         onRegisterSuccess({ token: data.token, user: data.user });
       }
       
-    } catch (error) {
+    } catch {
       setMessage('Server error. Please try again.');
     } finally {
       setLoading(false);

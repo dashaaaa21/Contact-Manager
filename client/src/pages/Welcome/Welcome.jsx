@@ -1,7 +1,6 @@
 import { Link } from 'react-router-dom';
 
-export default function Welcome({ onComplete }) {
-    console.log('Welcome component rendering');
+export default function Welcome() {
     return (
         <div className="relative min-h-screen overflow-hidden">
             

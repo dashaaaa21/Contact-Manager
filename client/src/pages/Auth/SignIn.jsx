@@ -37,7 +37,7 @@ export default function SignIn({ onLoginSuccess }) {
         onLoginSuccess({ token: data.token, user: data.user });
       }
       
-    } catch (error) {
+    } catch {
       setMessage('Server error. Please try again.');
     } finally {
       setLoading(false);
