@@ -1,0 +1,13 @@
+{
+  "testUser": {
+    "email": "cypress-test@example.com",
+    "password": "CypressTest123!",
+    "name": "Cypress Test User"
+  },
+  "contact": {
+    "name": "John Doe",
+    "phone": "+380123456789",
+    "email": "john@example.com",
+    "status": "work"
+  }
+}
