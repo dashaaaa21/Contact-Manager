@@ -1,11 +1,15 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useAppSelector, useAppDispatch } from "../../redux/hooks";
 import { removeContact } from "../../redux/contactsSlice";
+import { Contact } from "../../types";
+import ContactModal from "../ContactModal/ContactModal";
 
 export default function ContactItem() {
     const contacts = useAppSelector(state => state.contacts.contacts);
     const search = useAppSelector(state => state.contacts.search);
     const dispatch = useAppDispatch();
+    const [selectedContact, setSelectedContact] = useState<Contact | null>(null);
     
     const searchText = search ? search.toLowerCase() : '';
     
@@ -48,7 +52,7 @@ export default function ContactItem() {
                     </tr>
                 ) : (
                     filteredContacts.map((contact, index) => (
-                        <tr key={contact.id} className="hover:bg-gray-50 transition-colors">
+                        <tr key={contact.id} className="hover:bg-gray-50 transition-colors cursor-pointer" onClick={() => setSelectedContact(contact)}>
                             <th scope="row" className="px-2 sm:px-6 py-2 sm:py-4 whitespace-nowrap text-gray-900 font-medium">{index + 1}</th>
                             <td className="px-2 sm:px-6 py-2 sm:py-4 whitespace-nowrap">
                                 <img
@@ -59,10 +63,24 @@ export default function ContactItem() {
                             </td>
                             <td className="px-2 sm:px-6 py-2 sm:py-4 whitespace-nowrap text-gray-900">{contact.firstName}</td>
                             <td className="px-2 sm:px-6 py-2 sm:py-4 whitespace-nowrap text-gray-900">{contact.lastName}</td>
-                            <td className="px-2 sm:px-6 py-2 sm:py-4 whitespace-nowrap text-gray-600">{contact.email}</td>
-                            <td className="px-2 sm:px-6 py-2 sm:py-4 whitespace-nowrap text-gray-600">{contact.phone}</td>
+                            <td className="px-2 sm:px-6 py-2 sm:py-4 whitespace-nowrap" onClick={(e) => e.stopPropagation()}>
+                                <a 
+                                    href={`mailto:${contact.email}`}
+                                    className="text-blue-600 hover:text-blue-800 hover:underline transition-colors"
+                                >
+                                    {contact.email}
+                                </a>
+                            </td>
+                            <td className="px-2 sm:px-6 py-2 sm:py-4 whitespace-nowrap" onClick={(e) => e.stopPropagation()}>
+                                <a 
+                                    href={`tel:${contact.phone}`}
+                                    className="text-blue-600 hover:text-blue-800 hover:underline transition-colors"
+                                >
+                                    {contact.phone}
+                                </a>
+                            </td>
                             <td className="px-2 sm:px-6 py-2 sm:py-4 whitespace-nowrap text-gray-600">{contact.status}</td>
-                            <td className="px-2 sm:px-6 py-2 sm:py-4 whitespace-nowrap">
+                            <td className="px-2 sm:px-6 py-2 sm:py-4 whitespace-nowrap" onClick={(e) => e.stopPropagation()}>
                                 <div className="flex gap-1 sm:gap-2">
                                     <Link to={`/update-contact/${contact.id}`}>
                                         <button className="px-3 py-1 text-xs font-semibold text-blue-700 bg-blue-100 rounded hover:bg-blue-200 transition-colors">
@@ -82,6 +100,13 @@ export default function ContactItem() {
                 )}
                 </tbody>
             </table>
+
+            {selectedContact && (
+                <ContactModal
+                    contact={selectedContact}
+                    onClose={() => setSelectedContact(null)}
+                />
+            )}
         </div>
     );
 }
